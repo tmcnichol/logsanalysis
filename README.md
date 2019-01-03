@@ -1,4 +1,15 @@
 # FSND Project 1 - logsanalysis
+
+This project uses the Linux-based virtual machine, Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-75-generic x86_64, that was preconfigured and provided to me as part of Udacity's Full Stack Developer Nanodegree.
+
+The VM included the PostgreSQL database and support software needed for this project. Put this file into the vagrant directory, which is shared with your virtual machine.
+
+## How it Works
+
+After cloning or forking this repository:
+
+* Download the zip file with data from "https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip"
+
 ## Created Views
 The code in the project on q_three() depend on 3 created views:
 
