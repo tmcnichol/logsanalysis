@@ -1,13 +1,20 @@
 #!/usr/bin/python3
 import datetime
 import psycopg2
-
-DBNAME = "news"
+import sys
 
 
 def q_one():
     """Return three most popular articles of all time."""
-    db = psycopg2.connect("dbname=news")
+    try:
+        db = psycopg2.connect("dbname=news")
+    except psycopg2.Error as e:
+        print("Unable to connect!")
+        print(e.pgerror)
+        print(e.diag.message_detail)
+        sys.exit(1)
+    else:
+        print("Connected!")
     c = db.cursor()
     c.execute("""
         select title, count(*) as views
@@ -17,20 +24,31 @@ def q_one():
         order by views desc limit 3;""")
     bestreads = c.fetchall()
     db.close()
-    print(bestreads)
+    print('{article} - {count} views'.format(article=bestreads[0], count=bestreads[1]))
 
 
 def q_two():
     """Return the most popular article authors of all time."""
-    db = psycopg2.connect(database=DBNAME)
+    try:
+        db = psycopg2.connect("dbname=news")
+    except psycopg2.Error as e:
+        print("Unable to connect!")
+        print(e.pgerror)
+        print(e.diag.message_detail)
+        sys.exit(1)
+    else:
+        print("Connected!")
     c = db.cursor()
     c.execute("""
-        select authors.name as author, count (*) as reads
-        from authors, articles, log
-        where authors.id = articles.author
-        and replace(log.path, '/article/', '') = articles.slug
-        group by name
-        order by reads desc;""")
+        select title, views
+        from articles
+        inner join
+            (select path, count(path) as views
+            from log
+            group by log.path) as log
+        on log.path = '/article/' || articles.slug
+        order by views desc
+        limit 3""")
     bestwriters = c.fetchall()
     db.close()
     print(bestwriters)
@@ -38,12 +56,26 @@ def q_two():
 
 def q_three():
     """Return days with more than 1 percent of requests lead to errors."""
-    db = psycopg2.connect(database=DBNAME)
+    try:
+        db = psycopg2.connect("dbname=news")
+    except psycopg2.Error as e:
+        print("Unable to connect!")
+        print(e.pgerror)
+        print(e.diag.message_detail)
+        sys.exit(1)
+    else:
+        print("Connected!")
     c = db.cursor()
     c.execute("select * from dailyerrorp where error_percentage >= 1.00;")
     worstdays = c.fetchall()
     db.close()
     print(worstdays)
+
+
+if __name__ == '__main__':
+    print('This program is being run by itself')
+else:
+    print('I am being imported from another module')
 
 
 q_one()
