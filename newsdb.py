@@ -17,7 +17,7 @@ def q_one():
         order by views desc limit 3;""")
     bestreads = c.fetchall()
     db.close()
-    return bestreads
+    print(bestreads)
 
 
 def q_two():
@@ -33,7 +33,7 @@ def q_two():
         order by reads desc;""")
     bestwriters = c.fetchall()
     db.close()
-    return bestwriters
+    print(bestwriters)
 
 
 def q_three():
@@ -43,7 +43,7 @@ def q_three():
     c.execute("select * from dailyerrorp where error_percentage >= 1.00;")
     worstdays = c.fetchall()
     db.close()
-    return worstdays
+    print(worstdays)
 
 
 q_one()
